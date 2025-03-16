@@ -1,5 +1,7 @@
 services:
   fleet-server:
+    image: fleet-server:${ELASTIC_VERSION}
+    container_name: fleet-server
     build:
       context: extensions/fleet/
       args:

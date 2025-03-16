@@ -17,10 +17,12 @@ services:
   setup:
     profiles:
       - setup
-    build:
-      context: setup/
-      args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: setup
+#    build:
+#      context: setup/
+#      args:
+#        ELASTIC_VERSION: ${ELASTIC_VERSION}
     init: true
     volumes:
       - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
@@ -39,12 +41,15 @@ services:
       - elk
     depends_on:
       - elasticsearch
+    entrypoint: ["/entrypoint.sh"]
 
   elasticsearch:
-    build:
-      context: elasticsearch/
-      args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: elasticsearch
+#    build:
+#      context: elasticsearch/
+#      args:
+#        ELASTIC_VERSION: ${ELASTIC_VERSION}
     volumes:
       - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
       - elasticsearch:/usr/share/elasticsearch/data:Z
@@ -66,10 +71,12 @@ services:
     restart: unless-stopped
 
   logstash:
-    build:
-      context: logstash/
-      args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    image: docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
+    container_name: logstash
+#    build:
+#      context: logstash/
+#      args:
+#        ELASTIC_VERSION: ${ELASTIC_VERSION}
     volumes:
       - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro,Z
       - ./logstash/pipeline:/usr/share/logstash/pipeline:ro,Z
@@ -88,10 +95,12 @@ services:
     restart: unless-stopped
 
   kibana:
-    build:
-      context: kibana/
-      args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    image: docker.elastic.co/kibana/kibana:${ELASTIC_VERSION}
+    container_name: kibana
+#    build:
+#      context: kibana/
+#      args:
+#        ELASTIC_VERSION: ${ELASTIC_VERSION}
     volumes:
       - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
     ports:
